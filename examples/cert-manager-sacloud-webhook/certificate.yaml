@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: sacloud-tls
+  namespace: default
+spec:
+  secretName: <secret name> # need to edit
+  commonName: "*.<your domain>" # need to edit
+  dnsNames:
+    - "*.<your domain>" # need to edit
+  issuerRef:
+    name: sacloud-issuer
+    kind: ClusterIssuer

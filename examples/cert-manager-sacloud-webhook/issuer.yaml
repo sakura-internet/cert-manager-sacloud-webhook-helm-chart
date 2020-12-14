@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sakuracloud-api-token-secret
+  namespace: cert-manager
+type: Opaque
+data:
+  access-token: <base64 encoded API token> # need to edit
+  access-secret: <base64 encoded API token secret> # need to edit
+
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: sacloud-issuer
+  namespace: cert-manager
+spec:
+  acme:
+    email: <your email address> # need to edit
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: sacloud-issuer-account-key
+    solvers:
+      - dns01:
+          webhook:
+            groupName: sakura.ad.jp
+            solverName: saclouddns
+            config:
+              accessKeySecretRef:
+                name: sakuracloud-api-token-secret
+                key: access-token
+              secretKeySecretRef:
+                name: sakuracloud-api-token-secret
+                key: access-secret
