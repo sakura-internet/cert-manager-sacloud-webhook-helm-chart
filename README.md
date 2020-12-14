@@ -1,5 +1,7 @@
 # Helm chart of Cert manager webhook for sacloud 📦
 
+![](https://img.shields.io/badge/version-v1.0.0-green)
+
 ## Get started
 
 ### deploy Cert manager
