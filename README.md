@@ -1,14 +1,14 @@
-# Helm chart of Cert manager webhook for sacloud 📦
+# さくらのクラウド対応 Cert manager プラグイン 📦
 
 ![](https://img.shields.io/badge/version-v1.0.0-green)
 
-Helm chart of Cert manager webhook for sacloud.
+さくらのクラウドに構築したKubernetes上で最新版のCert managerが利用可能となります。以下の手順で開発したWebhookプラグインのインストールすることでCert managerがさくらのクラウドに対応します。
 
-## Get started
+## インストール
 
 ### Cert manager
 
-first of all, you deploy Cert manager.
+まず最初に以下の手順でCert managerをインストールします(バージョンは定義更新していただいて問題ありません)。
 
 ```bash
 $ kubectl create namespace cert-manager
@@ -20,37 +20,37 @@ $ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/rel
 $ helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.0.4
 ```
 
-### Webhook for sacloud
+### Webhookプラグイン
 
-Next, you deploy Cert manager webhook for sacloud as Helm chart.
+次にHelmチャートとしてCert managerのwebhookプラグインをインストールします。
 
 ```bash
-$ helm repo add cert-manager-sacloud-webhook https://0n1shi.github.io/cert-manager-sacloud-webhook-helm-chart/
+$ helm repo add cert-manager-sacloud-webhook https://sakura-internet.github.io/cert-manager-sacloud-webhook-helm-chart/
 $ helm install cert-manager-sacloud-webhook cert-manager-sacloud-webhook/cert-manager-sacloud-webhook --namespace cert-manager --version v1.0.0
 ```
 
-### Nginx to test
+### テスト
 
-Now you can create issuer and certificate to deploy Nginx which we can access over TLS.
-
-```bash
-# you need to edit manifests below before apply
-
-kubectl apply -f examples/cert-manager-sacloud-webhook/issuer.yaml
-kubectl apply -f examples/cert-manager-sacloud-webhook/certificate.yaml
-kubectl apply -f examples/cert-manager-sacloud-webhook/nginx.yaml
-```
-
-## Development
+ここからテストとしてNginxをデプロイします。Issuer及びCertificateリソースを作成し証明書のデータを含んだSecretリソースを指定しTLS通信を行います(以下のyamlは適宜変更が必要です)。
 
 ```bash
-helm lint charts/cert-manager-sacloud-webhook
-helm package charts/cert-manager-sacloud-webhook
-
-# genereted charts/cert-manager-sacloud-webhook-<VERSION>.tgz in the current directory.
+$ kubectl apply -f examples/cert-manager-sacloud-webhook/issuer.yaml
+$ kubectl apply -f examples/cert-manager-sacloud-webhook/certificate.yaml
+$ kubectl apply -f examples/cert-manager-sacloud-webhook/nginx.yaml
 ```
 
-# Refs
+## 開発
+
+以下のコマンドでHelmチャートにLintをかけパッケージングを行います。
+
+```bash
+$ helm lint charts/cert-manager-sacloud-webhook
+$ helm package charts/cert-manager-sacloud-webhook
+```
+
+上記のコマンド実行後`charts/cert-manager-sacloud-webhook-<VERSION>.tgz`が生成されます。
+
+# 参考
 
 - https://cert-manager.io/docs/concepts/webhook/
 - https://helm.sh/docs/topics/chart_repository/
